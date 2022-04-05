@@ -1,0 +1,58 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load mathfilters%}
+{% block title %}
+    Your Shopping Cart| Checkout
+{% endblock %}
+ 
+{% block content %}
+<link rel="stylesheet" href="{% static "css/base.cs "%}">
+    <div class="container">
+        <div class="row" style="margin-top: 6%">
+              <div class="col-md-4">
+                   <div class="page-header">
+                            Your Order
+                        </div>
+                        <ul class="list-group">
+                            {% for item in cart %}
+                                <li class="list-group-item">
+                                {{ item.quantity }}x {{ item.product.name }}
+                                <span> {{ item.total_price }}$</span>
+                                </li>
+                            {% endfor %}
+         
+                        <li class="list-group-item active">Total Cost: {{ cart.get_total_price }}$</li>
+                        </ul>
+         
+                    </div>
+            <div class="col-md-8">
+                <h4 class="page-header">Checkout</h4>
+                <form action="." method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}<br>
+                    <input type="submit" class="btn btn-primary stripe-button" value="Submit order">
+                    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="{{key}}"
+                    data-description="payer par carte credit"
+                    data-amount="{{cart.get_total_price|mul:100}}"
+                    data-locale="auto"></script>
+                </form>
+            </div>
+           
+        </div>
+    </div>
+
+
+<style type="text/css">
+    input[type=date],input[type=datetime-local],input[type=email],input[type=number],input[type=passeword],input[type=search-md],
+    input[type=tel],input[type=text],input[type=time],input[type=url],
+    textarea.materialize-textarea{
+        height: 2em !important;
+    }
+</style>
+<style type="text/css">
+    .stripe-button-el {
+        display: none;
+    }
+</style>
+{% endblock %}
